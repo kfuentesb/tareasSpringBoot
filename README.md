@@ -13,7 +13,7 @@ Explica brevemente cómo has organizado:
 - Controller: GameController
 - Service: GameService
 - Repository: GameRepository
-- Entity: game
+- Entity: Game
 
 ## 4) Base de datos elegida (marca una)
 - [x] H2
@@ -58,12 +58,12 @@ spring.h2.console.path=/h2-console
    - http://localhost:8080/...
 
 ## 7) Pantallas / Rutas MVC
-- GET /games (listar)
-- GET /games/nuevo (formulario alta)
-- POST /games (crear)
-- GET /games/{id}/editar (editar)
-- POST /games/{id} (actualizar)
-- POST /games/{id}/borrar (eliminar)
+- GET /game (listar)
+- GET /game/nuevo (formulario alta)
+- POST /game (crear)
+- GET /game/{id}/editar (editar)
+- POST /game/{id} (actualizar)
+- POST /game/{id}/borrar (eliminar)
 
 
 ## 8) Mejoras extra (opcional)
