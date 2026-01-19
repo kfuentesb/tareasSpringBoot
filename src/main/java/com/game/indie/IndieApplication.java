@@ -1,4 +1,4 @@
-package com.games.indie;
+package com.game.indie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
