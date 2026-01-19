@@ -1,7 +1,7 @@
 # CRUD MVC con Thymeleaf — RA3
 
 ## 1) Datos del alumno/a
-- Entidad elegida (ej. Producto, Libro...): Games
+- Entidad elegida (ej. Producto, Libro...): Game
 
 ## 2) Repositorio (fork) y gestión de versiones
 - Repositorio base: https://github.com/profeInformatica101/tareasSpringBoot
@@ -10,10 +10,10 @@
 
 ## 3) Arquitectura
 Explica brevemente cómo has organizado:
-- Controller: gamesController
-- Service:
-- Repository:
-- Entity: Games
+- Controller: GameController
+- Service: GameService
+- Repository: GameRepository
+- Entity: game
 
 ## 4) Base de datos elegida (marca una)
 - [x] H2
