@@ -23,13 +23,15 @@ Explica brevemente cómo has organizado:
 ## 5) Configuración de la base de datos
 ### 5.1 Dependencias añadidas
 #### H2
+```
 (Indica la dependencia del driver que has usado)
 <dependency>
   <groupId>com.h2database</groupId>
   <artifactId>h2</artifactId>
   <scope>runtime</scope>
 </dependency>
-
+```
+```
 spring.datasource.url=jdbc:h2:mem:cruddb
 spring.datasource.driver-class-name=org.h2.Driver
 spring.datasource.username=sa
@@ -40,7 +42,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
-
+```
 ### 5.2 application.properties / application.yml
 (Pega aquí tu configuración SIN contraseñas reales si es necesario)
 
