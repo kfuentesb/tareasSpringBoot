@@ -1,28 +1,45 @@
 # CRUD MVC con Thymeleaf — RA3
 
 ## 1) Datos del alumno/a
-- Entidad elegida (ej. Producto, Libro...):
+- Entidad elegida (ej. Producto, Libro...): Games
 
 ## 2) Repositorio (fork) y gestión de versiones
 - Repositorio base: https://github.com/profeInformatica101/tareasSpringBoot
-- Enlace a MI fork: [PON AQUÍ EL ENLACE CUANDO LO CREES]
+- Enlace a MI fork: [[PON AQUÍ EL ENLACE CUANDO LO CREES](https://github.com/kfuentesb/tareasSpringBoot/)]
 - Nº de commits realizados: (mínimo 5)
 
 ## 3) Arquitectura
 Explica brevemente cómo has organizado:
-- Controller:
+- Controller: gamesController
 - Service:
 - Repository:
-- Entity:
+- Entity: Games
 
 ## 4) Base de datos elegida (marca una)
-- [ ] H2
+- [x] H2
 - [ ] MySQL
 - [ ] PostgreSQL
 
 ## 5) Configuración de la base de datos
 ### 5.1 Dependencias añadidas
+#### H2
 (Indica la dependencia del driver que has usado)
+<dependency>
+  <groupId>com.h2database</groupId>
+  <artifactId>h2</artifactId>
+  <scope>runtime</scope>
+</dependency>
+
+spring.datasource.url=jdbc:h2:mem:cruddb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
 
 ### 5.2 application.properties / application.yml
 (Pega aquí tu configuración SIN contraseñas reales si es necesario)
@@ -39,12 +56,12 @@ Explica brevemente cómo has organizado:
    - http://localhost:8080/...
 
 ## 7) Pantallas / Rutas MVC
-- GET /entidad (listar)
-- GET /entidad/nuevo (formulario alta)
-- POST /entidad (crear)
-- GET /entidad/{id}/editar (editar)
-- POST /entidad/{id} (actualizar)
-- POST /entidad/{id}/borrar (eliminar)
+- GET /games (listar)
+- GET /games/nuevo (formulario alta)
+- POST /games (crear)
+- GET /games/{id}/editar (editar)
+- POST /games/{id} (actualizar)
+- POST /games/{id}/borrar (eliminar)
 
 
 ## 8) Mejoras extra (opcional)
