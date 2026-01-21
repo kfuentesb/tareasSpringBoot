@@ -18,21 +18,17 @@ public class Game {
 		@NotBlank(message = "El titulo no puede estar vacio")
 		private String titulo;
 		@Positive(message = "El precio tiene que ser positivo")
-		private String descripcion;
-		
-		@NotBlank(message = "Categoría tiene que tener un valor")
-		private String categoria;
+		private Double precio;
 		
 		public Game() {}
 		
-		public Game(int id, String titulo, String descripcion) {
+		public Game(int id, String titulo, Double precio) {
 			super();
 			this.id = id;
 			this.titulo = titulo;
-			this.descripcion = descripcion;
+			this.precio = precio;
 			
 		}
-
 
 		public String getTitulo() {
 			return titulo;
@@ -42,12 +38,12 @@ public class Game {
 			this.titulo = titulo;
 		}
 
-		public String getDescripcion() {
-			return descripcion;
+		public Double getPrecio() {
+			return precio;
 		}
 
-		public void setDescripcion(String descripcion) {
-			this.descripcion = descripcion;
+		public void setPrecio(Double precio) {
+			this.precio = precio;
 		}
 
 		public Integer getId() {
@@ -60,7 +56,7 @@ public class Game {
 
 		@Override
 		public String toString() {
-			return "Game [id=" + id + ", titulo=" + titulo + ", descripcion=" + descripcion + "]";
+			return "Game [id=" + id + ", titulo=" + titulo + ", precio=" + precio + "]";
 		}
 		
 			

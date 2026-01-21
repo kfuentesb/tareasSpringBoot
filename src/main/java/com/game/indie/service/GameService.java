@@ -1,22 +1,17 @@
 package com.game.indie.service;
 
-import com.game.indie.entidad.Game;
-import com.game.indie.repository.GameRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import com.game.indie.entidad.Game;
 
-@Service
-public class GameService {
+public interface GameService {
 
-    @Autowired
-    private GameRepository gameRepository;
+    Game guardar(Game game);
 
-    public List<Game> obtenerTodosLosJuegos() {
-        return gameRepository.findAll();
-    }
+    List<Game> listarTodos();
 
-    public Game guardarJuego(Game game) {
-        return gameRepository.save(game);
-    }
+    Game buscarPorId(Integer id);
+
+    Game actualizar(Integer id, Game game);
+
+    void eliminar(Integer id);
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formulario Juego</title>
+</head>
+<body>
+
+<h1>Formulario Juego</h1>
+
+<form th:action="@{/games/guardar}" th:object="${game}" method="post">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Título:</label>
+    <input type="text" th:field="*{titulo}"/><br><br>
+
+    <label>Descripción:</label>
+    <input type="text" th:field="*{descripcion}"/><br><br>
+
+    <label>Categoría:</label>
+    <input type="text" th:field="*{categoria}"/><br><br>
+
+    <button type="submit">Guardar</button>
+</form>
+
+<a th:href="@{/games}">Volver</a>
+
+</body>
+</html>

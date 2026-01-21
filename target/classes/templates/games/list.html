@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Listado de Juegos</title>
+</head>
+<body>
+
+<h1>🎮 Juegos Indie</h1>
+
+<a th:href="@{/games/nuevo}">Nuevo Juego</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Categoría</th>
+        <th>Acciones</th>
+    </tr>
+
+    <tr th:each="g : ${games}">
+        <td th:text="${g.id}"></td>
+        <td th:text="${g.titulo}"></td>
+        <td th:text="${g.descripcion}"></td>
+        <td th:text="${g.categoria}"></td>
+        <td>
+            <a th:href="@{/games/editar/{id}(id=${g.id})}">Editar</a>
+            <a th:href="@{/games/eliminar/{id}(id=${g.id})}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
