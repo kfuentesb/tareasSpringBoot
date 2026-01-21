@@ -14,14 +14,14 @@
         <th>ID</th>
         <th>Título</th>
         <th>Descripción</th>
-        <th>Categoría</th>
+        <th>Precio</th>
         <th>Acciones</th>
     </tr>
 
     <tr th:each="g : ${games}">
         <td th:text="${g.id}"></td>
         <td th:text="${g.titulo}"></td>
-        <td th:text="${g.descripcion}"></td>
+        <td th:text="${g.precio}"></td>
         <td th:text="${g.categoria}"></td>
         <td>
             <a th:href="@{/games/editar/{id}(id=${g.id})}">Editar</a>
