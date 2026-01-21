@@ -53,7 +53,15 @@ spring.h2.console.path=/h2-console
 <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-h2console</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -67,14 +75,9 @@ spring.h2.console.path=/h2-console
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -83,29 +86,47 @@ spring.h2.console.path=/h2-console
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
 >>>>>>> ab5868d7c199016ac7ba4912e9185511184f9e67
 ```
 ### 5.2 application.properties / application.yml
 ```
-spring.application.name=NextIndie
-
-spring.datasource.url=jdbc:mysql://localhost:3306/nextindie_db?createDatabaseIfNotExist=true&serverTimezone=UTC
-
-spring.datasource.username=root
+# H2
+spring.datasource.url=jdbc:h2:mem:indiedb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
 spring.datasource.password=
 
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-spring.jpa.hibernate.ddl-auto=update
-
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-
+# JPA
+spring.jpa.hibernate.ddl-auto=create
+# spring.jpa.hibernate.ddl-auto=none "Crear tabla manualmente"
+spring.jpa.defer-datasource-initialization=true
 spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+# H2 Console
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# Thymeleaf
+spring.thymeleaf.cache=false
+
 ```
 
 ### 5.3 Pasos para crear la BD (si aplica)
