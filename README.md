@@ -17,14 +17,8 @@ Explica brevemente cómo has organizado:
 - Entity: Game
 
 ## 4) Base de datos elegida (marca una)
-<<<<<<< HEAD
 - [x] H2
 - [ ] MySQL
-=======
-- [] H2
-- [x] MySQL
->>>>>>> ab5868d7c199016ac7ba4912e9185511184f9e67
-- [ ] PostgreSQL
 
 ## 5) Configuración de la base de datos
 ### 5.1 Dependencias añadidas
