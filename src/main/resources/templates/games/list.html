@@ -5,10 +5,20 @@
 </head>
 <body>
 
-<h1>🎮 Juegos Indie</h1>
+<h1>Juegos Indie</h1>
 
-<a th:href="@{/games/nuevo}">Nuevo Juego</a>
+	<a th:href="@{/games/nuevo}">Nuevo Juego</a>
 
+	<div th:unless="${games.isEmpty()}">
+		<table>
+			<tr th:each="game : ${games}">
+				<td><span th:text="${game.titulo}"></span></td>
+				<td><span th:text="${game.precio}"></span></td>
+				<td><span th:text="${g.categoria}"></span></td>
+			</tr>
+		</table>
+	</div>
+<!--
 <table border="1">
     <tr>
         <th>ID</th>
@@ -29,6 +39,6 @@
         </td>
     </tr>
 </table>
-
+-->
 </body>
 </html>
