@@ -1,5 +1,8 @@
 package com.game.indie.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +20,22 @@ public class GameController {
         this.service = service;
     }
 
-    // LISTAR
+    // Listar paginación
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("games", service.listarTodos());
+    public String listar(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+
+        Page<Game> gamesPage = service.listarPaginado(
+                PageRequest.of(page, size, Sort.by("titulo").ascending())
+        );
+
+        model.addAttribute("gamesPage", gamesPage);
+        model.addAttribute("games", gamesPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+
         return "games/list";
     }
 

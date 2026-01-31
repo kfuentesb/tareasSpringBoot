@@ -3,6 +3,8 @@ package com.game.indie.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.game.indie.entidad.Game;
@@ -25,6 +27,11 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<Game> listarTodos() {
         return repository.findAll();
+    }
+
+    @Override
+    public Page<Game> listarPaginado(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Override
