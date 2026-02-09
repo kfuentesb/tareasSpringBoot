@@ -1,10 +1,13 @@
 package com.game.indie.controller;
 
+import jakarta.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.game.indie.entidad.Game;
@@ -20,7 +23,9 @@ public class GameController {
         this.service = service;
     }
 
-    // Listar paginación
+    // ===============================
+    // LISTAR CON PAGINACIÓN
+    // ===============================
     @GetMapping
     public String listar(
             @RequestParam(defaultValue = "0") int page,
@@ -33,34 +38,61 @@ public class GameController {
 
         model.addAttribute("gamesPage", gamesPage);
         model.addAttribute("games", gamesPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
 
         return "games/list";
     }
 
+
+    // ===============================
     // FORM NUEVO
+    // ===============================
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("game", new Game());
         return "games/form";
     }
 
-    // GUARDAR
+
+    // ===============================
+    // GUARDAR (crear o editar)
+    // ===============================
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Game game) {
+    public String guardar(
+            @Valid @ModelAttribute("game") Game game,
+            BindingResult result,
+            Model model) {
+
+        // Si hay errores de validación → volver al form
+        if (result.hasErrors()) {
+            return "games/form";
+        }
+
         service.guardar(game);
+
         return "redirect:/games";
     }
 
+
+    // ===============================
     // EDITAR
+    // ===============================
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Integer id, Model model) {
-        model.addAttribute("game", service.buscarPorId(id));
+
+        Game game = service.buscarPorId(id);
+
+        if (game == null) {
+            return "redirect:/games";
+        }
+
+        model.addAttribute("game", game);
         return "games/form";
     }
 
+
+    // ===============================
     // ELIMINAR
+    // ===============================
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id) {
         service.eliminar(id);

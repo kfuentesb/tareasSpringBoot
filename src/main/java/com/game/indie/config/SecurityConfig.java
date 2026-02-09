@@ -33,24 +33,24 @@ public class SecurityConfig {
   @Bean
   SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    // H2 console necesita iframes
+    // H2 console iframes
     http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
     http.authorizeHttpRequests(auth -> auth
-      // estáticos
       .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-      // público
       .requestMatchers("/", "/saluda").permitAll()
+
+      // Solo ADMIN para dashboard
+      .requestMatchers("/admin/**").hasRole(Rol.ADMIN.toString())
+
       // H2 solo ADMIN
       .requestMatchers(PathRequest.toH2Console()).hasRole(Rol.ADMIN.toString())
       .requestMatchers("/h2-console/**", "/h2/**").hasRole(Rol.ADMIN.toString())
-      // productos: USUARIO o ADMIN (ajústalo si quieres también MANAGER)
-      .requestMatchers("/productos/**").hasAnyRole(Rol.USUARIO.toString(), Rol.ADMIN.toString())
-      // el resto: autenticado
+
+      // usuarios autenticados
       .anyRequest().authenticated()
     );
 
-    // CSRF: desactivar solo para H2
     http.csrf(csrf -> csrf
       .ignoringRequestMatchers(PathRequest.toH2Console())
       .ignoringRequestMatchers("/h2-console/**", "/h2/**")
@@ -58,11 +58,11 @@ public class SecurityConfig {
 
     // login form
     http.formLogin(form -> form
-      .defaultSuccessUrl("/productos", true)
+      .defaultSuccessUrl("/games", true)
       .permitAll()
     );
 
-    // logout (por defecto usa POST /logout)
+    // logout
     http.logout(logout -> logout.permitAll());
 
     return http.build();
