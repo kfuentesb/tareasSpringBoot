@@ -44,7 +44,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional // Permite escritura en BD
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')") // Solo ADMIN o MANAGER pueden crear juegos
     public Game guardar(Game game) {
         // Validación de negocio adicional si se requiere
         if (game.getPrecio() != null && game.getPrecio() < 0) {
@@ -71,7 +70,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')") // Solo ADMIN o MANAGER pueden actualizar
     public Game actualizar(Integer id, Game game) {
         // Buscar el juego existente
         Game existente = repository.findById(id)
@@ -86,7 +84,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')") // Solo ADMIN puede eliminar
     public void eliminar(Integer id) {
         // Verificar que el juego existe antes de eliminar
         if (!repository.existsById(id)) {

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <!-- 
+        LAYOUT BASE
+        Este es el layout principal que usan todas las páginas.
+        Define la estructura común: head, header, contenido, footer.
+        
+        Las páginas que usen este layout deben:
+        1. Declarar layout:decorate="~{layout/base}"
+        2. Definir su contenido en un <div layout:fragment="content">
+    -->
+    <th:block th:replace="~{fragments/head :: head}"></th:block>
+</head>
+<body>
+    <!-- Header con navegación -->
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Mensajes flash (éxito, error, info, warning) -->
+            <th:block th:replace="~{fragments/messages :: messages}"></th:block>
+            
+            <!-- Aquí se inyecta el contenido específico de cada página -->
+            <div layout:fragment="content">
+                <p>Contenido de la página</p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

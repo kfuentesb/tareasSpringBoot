@@ -41,10 +41,9 @@ public class Game {
     
     /**
      * Precio del juego en euros. Debe ser un valor positivo.
-     * Se almacena con precisión decimal (precision=10, scale=2).
      */
     @Positive(message = "El precio debe ser positivo")
-    @Column(name = "precio", nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio", nullable = false)
     private Double precio;
     
     // Constructores
