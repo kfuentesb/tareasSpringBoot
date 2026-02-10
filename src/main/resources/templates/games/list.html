@@ -1,86 +1,216 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Listado de Juegos</title>
+    <th:block th:replace="~{fragments/head :: head}"></th:block>
+    <title>Listado de Juegos - Indie Games</title>
     <style>
         table {
+            width: 100%;
             border-collapse: collapse;
-            width: 80%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        
         th, td {
-            border: 1px solid #333;
-            padding: 8px;
-            text-align: center;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
         }
+        
         th {
-            background-color: #eee;
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            text-transform: uppercase;
+            font-size: 13px;
+            letter-spacing: 0.5px;
         }
-        a {
-            margin: 0 5px;
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
         }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
         .pagination {
-            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .disabled {
+        
+        .pagination a {
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            color: #007bff;
+            transition: all 0.3s;
+        }
+        
+        .pagination a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .pagination .disabled {
             color: #999;
             pointer-events: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state h2 {
+            font-size: 36px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state p {
+            font-size: 18px;
+            color: #adb5bd;
+            margin-bottom: 30px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
     </style>
 </head>
 <body>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    
+    <main class="main-content">
+        <div class="container">
+            <!-- Mensajes flash -->
+            <th:block th:replace="~{fragments/messages :: messages}"></th:block>
+            
+            <!-- Header de la página con título y acciones -->
+            <div class="page-header">
+                <div>
+                    <h1 style="font-size: 32px; color: #333; margin-bottom: 5px;">Catálogo de Juegos Indie</h1>
+                    <p style="color: #6c757d; margin: 0;">
+                        Total de juegos: <strong th:text="${gamesPage.totalElements}">0</strong>
+                    </p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a th:href="@{/games/nuevo}" 
+                       class="btn btn-success"
+                       sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+                        ➕ Nuevo Juego
+                    </a>
+                    <a th:href="@{/admin/dashboard}" 
+                       class="btn btn-secondary"
+                       sec:authorize="hasRole('ADMIN')">
+                        🔧 Dashboard
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Estado vacío: cuando no hay juegos -->
+            <div th:if="${isEmpty}" class="empty-state">
+                <h2>📦</h2>
+                <h2>No hay juegos en el catálogo</h2>
+                <p>Comienza agregando tu primer juego indie</p>
+                <a th:href="@{/games/nuevo}" 
+                   class="btn btn-primary"
+                   sec:authorize="hasAnyRole('ADMIN', 'MANAGER')"
+                   style="font-size: 16px;">
+                    Agregar Primer Juego
+                </a>
+            </div>
+            
+            <!-- Tabla de juegos -->
+            <div th:unless="${isEmpty}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>Título</th>
+                            <th style="width: 150px;">Precio</th>
+                            <th style="width: 250px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="g : ${games}">
+                            <td th:text="${g.id}" style="font-weight: 600; color: #6c757d;">1</td>
+                            <td th:text="${g.titulo}" style="font-weight: 500; color: #333;">Nombre del juego</td>
+                            <td style="font-weight: 600; color: #28a745;">
+                                <span th:text="${#numbers.formatDecimal(g.precio, 1, 'COMMA', 2, 'POINT')}">0.00</span> €
+                            </td>
+                            <td>
+                                <div class="action-buttons" style="justify-content: center;">
+                                    <!-- Botón Editar -->
+                                    <a th:href="@{/games/{id}/editar(id=${g.id})}" 
+                                       class="btn btn-primary"
+                                       sec:authorize="hasAnyRole('ADMIN', 'MANAGER')"
+                                       style="font-size: 13px; padding: 6px 12px;">
+                                        ✏️ Editar
+                                    </a>
+                                    
+                                    <!-- Botón Eliminar (form con DELETE method) -->
+                                    <form th:action="@{/games/{id}(id=${g.id})}" 
+                                          method="post" 
+                                          style="display: inline; margin: 0;"
+                                          sec:authorize="hasRole('ADMIN')"
+                                          onsubmit="return confirm('¿Estás seguro de eliminar este juego?');">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <button type="submit" class="btn btn-danger" style="font-size: 13px; padding: 6px 12px;">
+                                            🗑️ Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <!-- Paginación -->
+                <div class="pagination">
+                    <span style="color: #6c757d; font-weight: 500;">
+                        Página <strong th:text="${gamesPage.number + 1}">1</strong> 
+                        de <strong th:text="${gamesPage.totalPages}">10</strong>
+                    </span>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <a th:if="${gamesPage.hasPrevious()}" 
+                           th:href="@{/games(page=${gamesPage.number - 1}, size=${gamesPage.size})}">
+                            « Anterior
+                        </a>
+                        <span th:unless="${gamesPage.hasPrevious()}" class="disabled">« Anterior</span>
 
-<h1>Juegos Indie</h1>
-
-<p>
-    <a th:href="@{/games/nuevo}">Nuevo Juego</a>
-</p>
-
-<p sec:authorize="hasRole('ADMIN')">
-    <a th:href="@{/admin/dashboard}">Ir al dashboard admin</a>
-</p>
-
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Precio (€)</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="g : ${games}">
-            <td th:text="${g.id}"></td>
-            <td th:text="${g.titulo}"></td>
-            <td th:text="${#numbers.formatDecimal(g.precio, 1, 'COMMA', 2, 'POINT')}"></td>
-            <td>
-                <a th:href="@{/games/editar/{id}(id=${g.id})}">Editar</a>
-                <a th:href="@{/games/eliminar/{id}(id=${g.id})}" 
-                   onclick="return confirm('¿Estás seguro de eliminar este juego?');">Eliminar</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
-<div class="pagination">
-    <span th:text="'Página ' + (${gamesPage.number} + 1) + ' de ' + ${gamesPage.totalPages}"></span>
-</div>
-
-<div class="pagination">
-    <a th:if="${gamesPage.hasPrevious()}" 
-       th:href="@{/games(page=${gamesPage.number - 1}, size=${gamesPage.size})}">
-        « Anterior
-    </a>
-    <span th:if="${!gamesPage.hasPrevious()}" class="disabled">« Anterior</span>
-
-    <a th:if="${gamesPage.hasNext()}" 
-       th:href="@{/games(page=${gamesPage.number + 1}, size=${gamesPage.size})}">
-        Siguiente »
-    </a>
-    <span th:if="${!gamesPage.hasNext()}" class="disabled">Siguiente »</span>
-</div>
-<form th:action= "@{/logout}" method="post" style="margin-bottom: 1rem;">
-  <button type="submit">Cerrar sesión</button>
-</form>
+                        <a th:if="${gamesPage.hasNext()}" 
+                           th:href="@{/games(page=${gamesPage.number + 1}, size=${gamesPage.size})}">
+                            Siguiente »
+                        </a>
+                        <span th:unless="${gamesPage.hasNext()}" class="disabled">Siguiente »</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

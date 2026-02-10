@@ -1,30 +1,198 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Panel Admin</title>
+    <th:block th:replace="~{fragments/head :: head}"></th:block>
+    <title>Dashboard Admin - Indie Games</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
         }
-        h1 {
-            color: darkred;
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        a {
-            display: inline-block;
-            margin-top: 15px;
+        
+        .stat-card h3 {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .stat-card .description {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .action-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .action-card .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .action-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #495057;
+        }
+        
+        .action-card p {
+            font-size: 14px;
+            color: #6c757d;
+            margin: 0;
+        }
+        
+        .info-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
-
-<h1>Panel de Administración</h1>
-
-<p th:text="${mensaje}"></p>
-
-<ul>
-    <li><a th:href="@{/games}">Ver juegos</a></li>
-    <li><a th:href="@{/logout}">Cerrar sesión</a></li>
-</ul>
-
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    
+    <main class="main-content">
+        <div class="container">
+            <!-- Título y bienvenida -->
+            <div style="margin-bottom: 30px;">
+                <h1 style="font-size: 36px; color: #333; margin-bottom: 10px;">
+                    🔧 Panel de Administración
+                </h1>
+                <p style="color: #6c757d; font-size: 16px;" th:text="${mensaje}">
+                    Bienvenido al panel de administrador
+                </p>
+            </div>
+            
+            <!-- Estadísticas (simuladas - en una app real vendrían del backend) -->
+            <div class="dashboard-grid">
+                <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3>Total de Juegos</h3>
+                    <div class="value">100</div>
+                    <div class="description">Juegos en el catálogo</div>
+                </div>
+                
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h3>Usuarios Activos</h3>
+                    <div class="value">3</div>
+                    <div class="description">ADMIN, MANAGER, USUARIO</div>
+                </div>
+                
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <h3>Accesos H2 Console</h3>
+                    <div class="value">∞</div>
+                    <div class="description">Solo para administradores</div>
+                </div>
+            </div>
+            
+            <!-- Acciones rápidas -->
+            <h2 style="margin-top: 50px; margin-bottom: 20px; color: #333;">Acciones Rápidas</h2>
+            <div class="quick-actions">
+                <a th:href="@{/games}" class="action-card">
+                    <div class="icon">🎮</div>
+                    <h3>Ver Juegos</h3>
+                    <p>Explorar catálogo completo</p>
+                </a>
+                
+                <a th:href="@{/games/nuevo}" class="action-card">
+                    <div class="icon">➕</div>
+                    <h3>Nuevo Juego</h3>
+                    <p>Agregar juego al catálogo</p>
+                </a>
+                
+                <a th:href="@{/h2-console}" class="action-card" target="_blank">
+                    <div class="icon">💾</div>
+                    <h3>H2 Console</h3>
+                    <p>Gestionar base de datos</p>
+                </a>
+                
+                <a th:href="@{/}" class="action-card">
+                    <div class="icon">🏠</div>
+                    <h3>Inicio</h3>
+                    <p>Volver a la página principal</p>
+                </a>
+            </div>
+            
+            <!-- Información del sistema -->
+            <div class="info-section">
+                <h2 style="margin-bottom: 20px; color: #333;">Información del Sistema</h2>
+                
+                <div style="display: grid; gap: 15px;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px; background-color: #f8f9fa; border-radius: 4px;">
+                        <strong style="color: #495057;">Usuario autenticado:</strong>
+                        <span sec:authentication="name" style="color: #007bff;">admin</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; padding: 12px; background-color: #f8f9fa; border-radius: 4px;">
+                        <strong style="color: #495057;">Rol:</strong>
+                        <span sec:authentication="principal.authorities" style="color: #28a745;">ROLE_ADMIN</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; padding: 12px; background-color: #f8f9fa; border-radius: 4px;">
+                        <strong style="color: #495057;">Framework:</strong>
+                        <span style="color: #6c757d;">Spring Boot 4.0.1</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; padding: 12px; background-color: #f8f9fa; border-radius: 4px;">
+                        <strong style="color: #495057;">Motor de plantillas:</strong>
+                        <span style="color: #6c757d;">Thymeleaf</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; padding: 12px; background-color: #f8f9fa; border-radius: 4px;">
+                        <strong style="color: #495057;">Base de datos:</strong>
+                        <span style="color: #6c757d;">H2 (In-Memory)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Nota de seguridad -->
+            <div style="margin-top: 30px; padding: 20px; background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 4px;">
+                <strong style="color: #856404;">⚠️ Nota de Seguridad:</strong>
+                <p style="margin: 10px 0 0 0; color: #856404; font-size: 14px;">
+                    Este panel solo es accesible para usuarios con rol ADMIN. 
+                    Las acciones realizadas aquí pueden afectar el sistema completo.
+                </p>
+            </div>
+        </div>
+    </main>
+    
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

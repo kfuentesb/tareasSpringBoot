@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 
+        FRAGMENTO: Mensajes Flash
+        Muestra mensajes de éxito, error, info o warning que provienen de RedirectAttributes.
+        Los tipos soportados son: success, error, info, warning
+    -->
+    <div th:fragment="messages">
+        <!-- Mensaje de éxito -->
+        <div th:if="${success}" 
+             style="padding: 15px 20px; margin: 20px 0; border-radius: 4px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+            <strong>✓ Éxito:</strong>
+            <span th:text="${success}">Operación completada exitosamente</span>
+        </div>
+        
+        <!-- Mensaje de error -->
+        <div th:if="${error}" 
+             style="padding: 15px 20px; margin: 20px 0; border-radius: 4px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+            <strong>✗ Error:</strong>
+            <span th:text="${error}">Ha ocurrido un error</span>
+        </div>
+        
+        <!-- Mensaje informativo -->
+        <div th:if="${info}" 
+             style="padding: 15px 20px; margin: 20px 0; border-radius: 4px; background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;">
+            <strong>ℹ Información:</strong>
+            <span th:text="${info}">Información relevante</span>
+        </div>
+        
+        <!-- Mensaje de advertencia -->
+        <div th:if="${warning}" 
+             style="padding: 15px 20px; margin: 20px 0; border-radius: 4px; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;">
+            <strong>⚠ Advertencia:</strong>
+            <span th:text="${warning}">Ten en cuenta esta advertencia</span>
+        </div>
+    </div>
+</body>
+</html>

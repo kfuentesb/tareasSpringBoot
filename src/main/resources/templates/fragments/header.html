@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <!-- 
+        FRAGMENTO: Header / Navegación Principal
+        Incluye la barra de navegación con menús adaptados según el rol del usuario.
+        Se integra con Spring Security para mostrar/ocultar opciones según permisos.
+    -->
+    <header th:fragment="header">
+        <nav style="background-color: #343a40; color: white; padding: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <a th:href="@{/}" style="color: white; text-decoration: none; font-size: 24px; font-weight: bold;">
+                        🎮 Indie Games
+                    </a>
+                </div>
+                
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <!-- Menú principal -->
+                    <a th:href="@{/games}" style="color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px;">
+                        Juegos
+                    </a>
+                    
+                    <!-- Menú admin (solo visible para ADMIN) -->
+                    <a th:href="@{/admin/dashboard}" 
+                       sec:authorize="hasRole('ADMIN')"
+                       style="color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px;">
+                        Dashboard Admin
+                    </a>
+                    
+                    <!-- Información de usuario autenticado -->
+                    <div sec:authorize="isAuthenticated()" 
+                         style="display: flex; gap: 10px; align-items: center; padding: 8px 12px; background-color: rgba(255,255,255,0.1); border-radius: 4px;">
+                        <span style="color: #adb5bd;">Usuario:</span>
+                        <span style="color: white; font-weight: bold;" sec:authentication="name">Usuario</span>
+                        <span style="color: #6c757d;">|</span>
+                        <span style="color: #adb5bd; font-size: 12px;" sec:authentication="principal.authorities">[ROLE]</span>
+                    </div>
+                    
+                    <!-- Botón de logout -->
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+</body>
+</html>

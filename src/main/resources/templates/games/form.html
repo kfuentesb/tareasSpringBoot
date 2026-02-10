@@ -1,62 +1,201 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Formulario Juego</title>
+    <th:block th:replace="~{fragments/head :: head}"></th:block>
+    <title th:text="${isEdit} ? 'Editar Juego' : 'Nuevo Juego'">Formulario Juego</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
         }
-        form {
-            width: 300px;
-            margin: 20px 0;
+        
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        label {
+        
+        .form-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
             display: block;
-            margin-top: 10px;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 500;
+            font-size: 14px;
         }
-        input {
+        
+        .form-group label .required {
+            color: #dc3545;
+        }
+        
+        .form-control {
             width: 100%;
-            padding: 6px;
-            margin-top: 4px;
-            box-sizing: border-box;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        .error {
-            color: red;
-            font-size: 0.9em;
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
         }
-        button {
-            margin-top: 15px;
-            padding: 8px 15px;
+        
+        .form-control.is-invalid {
+            border-color: #dc3545;
         }
-        a {
-            display: inline-block;
-            margin-top: 15px;
+        
+        .form-control.is-invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+        }
+        
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        
+        .global-errors {
+            padding: 15px;
+            margin-bottom: 25px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            color: #721c24;
+        }
+        
+        .global-errors ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .global-errors li {
+            margin: 5px 0;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .form-actions button,
+        .form-actions a {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-
-<h1 th:text="${game.id} != null ? 'Editar Juego' : 'Nuevo Juego'">Formulario Juego</h1>
-
-<form th:action="@{/games/guardar}" th:object="${game}" method="post">
-
-    <input type="hidden" th:field="*{id}" />
-
-    <label for="titulo">Título:</label>
-    <input type="text" th:field="*{titulo}" id="titulo" placeholder="Nombre del juego" required />
-    <div class="error" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
-
-    <label for="precio">Precio (€):</label>
-    <input type="number" step="0.01" th:field="*{precio}" id="precio" placeholder="0.00" required />
-    <div class="error" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></div>
-
-    <button type="submit" th:text="${game.id} != null ? 'Actualizar' : 'Guardar'">Guardar</button>
-</form>
-
-<a th:href="@{/games}">Volver al listado</a>
-
-<form th:action="@{/logout}" method="post" style="margin-bottom: 1rem;">
-  <button type="submit">Cerrar sesión</button>
-</form>
+    <th:block th:replace="~{fragments/header :: header}"></th:block>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="form-container">
+                <div class="form-card">
+                    <h1 class="form-title" th:text="${isEdit} ? '✏️ Editar Juego' : '➕ Nuevo Juego'">
+                        Formulario Juego
+                    </h1>
+                    
+                    <!-- Errores globales del formulario -->
+                    <div th:if="${#fields.hasErrors('global')}" class="global-errors">
+                        <strong>❌ Se encontraron errores:</strong>
+                        <ul>
+                            <li th:each="err : ${#fields.errors('global')}" th:text="${err}">Error</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Formulario -->
+                    <form th:action="${isEdit} ? @{/games/{id}(id=${game.id})} : @{/games}" 
+                          th:object="${game}" 
+                          method="post">
+                        
+                        <!-- Campo oculto para ID (solo en edición) -->
+                        <input type="hidden" th:field="*{id}" th:if="${isEdit}" />
+                        
+                        <!-- Campo oculto para método PUT (solo en edición) -->
+                        <input type="hidden" name="_method" value="PUT" th:if="${isEdit}" />
+                        
+                        <!-- Campo: Título -->
+                        <div class="form-group">
+                            <label for="titulo">
+                                Título del Juego <span class="required">*</span>
+                            </label>
+                            <input type="text" 
+                                   th:field="*{titulo}" 
+                                   id="titulo" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid'"
+                                   placeholder="Ej: Celeste, Hollow Knight, Stardew Valley"
+                                   required />
+                            <div th:if="${#fields.hasErrors('titulo')}" class="invalid-feedback">
+                                <span th:errors="*{titulo}">Error en el título</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Campo: Precio -->
+                        <div class="form-group">
+                            <label for="precio">
+                                Precio (€) <span class="required">*</span>
+                            </label>
+                            <input type="number" 
+                                   step="0.01" 
+                                   min="0"
+                                   th:field="*{precio}" 
+                                   id="precio" 
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('precio')} ? 'is-invalid'"
+                                   placeholder="0.00"
+                                   required />
+                            <div th:if="${#fields.hasErrors('precio')}" class="invalid-feedback">
+                                <span th:errors="*{precio}">Error en el precio</span>
+                            </div>
+                            <small style="display: block; margin-top: 6px; color: #6c757d; font-size: 13px;">
+                                Ingresa el precio en euros (ej: 19.99)
+                            </small>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">
+                                <span th:text="${isEdit} ? '✓ Actualizar' : '💾 Guardar'">Guardar</span>
+                            </button>
+                            <a th:href="@{/games}" class="btn btn-secondary">
+                                ✕ Cancelar
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <!-- Información adicional -->
+                    <div style="margin-top: 30px; padding: 15px; background-color: #e7f3ff; border-radius: 4px;">
+                        <p style="margin: 0; font-size: 13px; color: #004085;">
+                            <strong>💡 Nota:</strong> Los campos marcados con <span style="color: #dc3545;">*</span> son obligatorios
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
