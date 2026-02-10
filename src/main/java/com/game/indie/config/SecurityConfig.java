@@ -1,6 +1,5 @@
 package com.game.indie.config;
 
-import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -68,17 +67,13 @@ public class SecurityConfig {
         // Authorization Rules
         // ============================================
         http.authorizeHttpRequests(auth -> auth
-            // Recursos estáticos públicos (CSS, JS, imágenes)
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            
             // Páginas públicas accesibles sin autenticación
-            .requestMatchers("/", "/login", "/error", "/error/**").permitAll()
+            .requestMatchers("/", "/login", "/error", "/error/**", "/css/**", "/js/**", "/images/**").permitAll()
 
             // Dashboard de administrador - solo ADMIN
             .requestMatchers("/admin/**").hasRole(Rol.ADMIN.toString())
 
             // H2 Console - solo ADMIN (para depuración en desarrollo)
-            .requestMatchers(PathRequest.toH2Console()).hasRole(Rol.ADMIN.toString())
             .requestMatchers("/h2-console/**", "/h2/**").hasRole(Rol.ADMIN.toString())
 
             // Todas las demás rutas requieren autenticación
@@ -90,7 +85,6 @@ public class SecurityConfig {
         // ============================================
         http.csrf(csrf -> csrf
             // Deshabilitar CSRF solo para H2 console (solo desarrollo)
-            .ignoringRequestMatchers(PathRequest.toH2Console())
             .ignoringRequestMatchers("/h2-console/**", "/h2/**")
             // CSRF está habilitado para el resto de la aplicación
         );
