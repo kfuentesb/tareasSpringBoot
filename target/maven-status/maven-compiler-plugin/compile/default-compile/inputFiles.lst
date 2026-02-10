@@ -1,0 +1,17 @@
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/IndieApplication.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/config/InitialDataFake.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/config/SecurityConfig.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/controller/AdminController.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/controller/GameController.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/controller/HomeController.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/entidad/Game.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/entidad/Usuario.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/entidad/enumerado/Rol.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/repository/GameRepository.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/repository/UsuarioRepositorio.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/service/GameService.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/service/GameServiceImpl.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/service/UserDetailsServiceImpl.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/service/UsuarioServicio.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/service/UsuarioServicioImpl.java
+/home/runner/work/tareasSpringBoot/tareasSpringBoot/src/main/java/com/game/indie/web/GlobalExceptionHandler.java
