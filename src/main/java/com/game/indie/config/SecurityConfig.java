@@ -15,56 +15,115 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.game.indie.entidad.enumerado.Rol;
 
+/**
+ * Configuración de seguridad de la aplicación.
+ * 
+ * Mejoras implementadas:
+ * - Login personalizado con página propia
+ * - Página de acceso denegado personalizada
+ * - Protección de H2 console solo para ADMIN
+ * - Seguridad a nivel de método habilitada (@PreAuthorize)
+ * - CSRF manejado correctamente (deshabilitado solo para H2)
+ * - Manejo de errores de autenticación mejorado
+ * 
+ * @EnableMethodSecurity habilita anotaciones de seguridad en métodos (@PreAuthorize, @PostAuthorize, @Secured)
+ */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity // Habilita seguridad a nivel de método
 public class SecurityConfig {
 
-  @Bean
-  AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    /**
+     * Bean del AuthenticationManager para gestión de autenticación.
+     */
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    /**
+     * Encoder de contraseñas BCrypt.
+     * BCrypt es un algoritmo robusto que incluye salt automático
+     * y es resistente a ataques de fuerza bruta.
+     */
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    /**
+     * Configuración de la cadena de filtros de seguridad.
+     * Define qué rutas están protegidas y cómo.
+     */
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    // H2 console iframes
-    http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        // ============================================
+        // H2 Console Configuration
+        // ============================================
+        // Permite iframes para H2 console (solo en desarrollo)
+        http.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 
-    http.authorizeHttpRequests(auth -> auth
-      .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-      .requestMatchers("/", "/saluda").permitAll()
+        // ============================================
+        // Authorization Rules
+        // ============================================
+        http.authorizeHttpRequests(auth -> auth
+            // Recursos estáticos públicos (CSS, JS, imágenes)
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            
+            // Páginas públicas accesibles sin autenticación
+            .requestMatchers("/", "/login", "/error", "/error/**").permitAll()
 
-      // Solo ADMIN para dashboard
-      .requestMatchers("/admin/**").hasRole(Rol.ADMIN.toString())
+            // Dashboard de administrador - solo ADMIN
+            .requestMatchers("/admin/**").hasRole(Rol.ADMIN.toString())
 
-      // H2 solo ADMIN
-      .requestMatchers(PathRequest.toH2Console()).hasRole(Rol.ADMIN.toString())
-      .requestMatchers("/h2-console/**", "/h2/**").hasRole(Rol.ADMIN.toString())
+            // H2 Console - solo ADMIN (para depuración en desarrollo)
+            .requestMatchers(PathRequest.toH2Console()).hasRole(Rol.ADMIN.toString())
+            .requestMatchers("/h2-console/**", "/h2/**").hasRole(Rol.ADMIN.toString())
 
-      // usuarios autenticados
-      .anyRequest().authenticated()
-    );
+            // Todas las demás rutas requieren autenticación
+            .anyRequest().authenticated()
+        );
 
-    http.csrf(csrf -> csrf
-      .ignoringRequestMatchers(PathRequest.toH2Console())
-      .ignoringRequestMatchers("/h2-console/**", "/h2/**")
-    );
+        // ============================================
+        // CSRF Configuration
+        // ============================================
+        http.csrf(csrf -> csrf
+            // Deshabilitar CSRF solo para H2 console (solo desarrollo)
+            .ignoringRequestMatchers(PathRequest.toH2Console())
+            .ignoringRequestMatchers("/h2-console/**", "/h2/**")
+            // CSRF está habilitado para el resto de la aplicación
+        );
 
-    // login form
-    http.formLogin(form -> form
-      .defaultSuccessUrl("/games", true)
-      .permitAll()
-    );
+        // ============================================
+        // Form Login Configuration
+        // ============================================
+        http.formLogin(form -> form
+            .loginPage("/login")                    // Página de login personalizada
+            .loginProcessingUrl("/login")           // URL donde se procesa el login
+            .defaultSuccessUrl("/games", true)      // Redirección tras login exitoso
+            .failureUrl("/login?error=true")        // Redirección si falla el login
+            .permitAll()
+        );
 
-    // logout
-    http.logout(logout -> logout.permitAll());
+        // ============================================
+        // Logout Configuration
+        // ============================================
+        http.logout(logout -> logout
+            .logoutUrl("/logout")                   // URL para cerrar sesión
+            .logoutSuccessUrl("/login?logout=true") // Redirección tras logout
+            .invalidateHttpSession(true)            // Invalida la sesión
+            .deleteCookies("JSESSIONID")            // Elimina cookies
+            .permitAll()
+        );
 
-    return http.build();
-  }
+        // ============================================
+        // Exception Handling - Access Denied
+        // ============================================
+        http.exceptionHandling(ex -> ex
+            .accessDeniedPage("/error/403")         // Página personalizada para acceso denegado
+        );
+
+        return http.build();
+    }
 }
